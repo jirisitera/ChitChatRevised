@@ -16,6 +16,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,11 +26,13 @@ public class ChitChatRenderer implements ChatRenderer {
 
     private final ChitChat plugin;
     private final UUID messageId;
-    private final Component renderedMessage;
+    private final Component renderedPlayerMessage;
+    private final Component renderedConsoleMessage;
 
     public ChitChatRenderer(
             ChitChat plugin,
-            String format,
+            String playerFormat,
+            String consoleFormat,
             SignedMessage signedMessage,
             Player player,
             Component chatMessage
@@ -47,7 +50,8 @@ public class ChitChatRenderer implements ChatRenderer {
                         .resolvers(resolvers)
                         .build()
                 ).build();
-        this.renderedMessage = formatter.deserialize(format);
+        this.renderedPlayerMessage = formatter.deserialize(playerFormat);
+        this.renderedConsoleMessage = formatter.deserialize(consoleFormat);
     }
 
     @Override
@@ -58,7 +62,7 @@ public class ChitChatRenderer implements ChatRenderer {
             @NotNull Audience audience
     ) {
         if (audience instanceof Player recipentPlayer && recipentPlayer.hasPermission("chitchat.deletemessage")) {
-            if (messageId == null) return renderedMessage;
+            if (messageId == null) return renderedPlayerMessage;
             Component deleteMessageButton = Component.space().append(
                     Component.text("[x]")
                             .color(NamedTextColor.RED)
@@ -72,9 +76,11 @@ public class ChitChatRenderer implements ChatRenderer {
                                     Component.text("Click to delete this message.")
                             ))
             );
-            return renderedMessage.append(deleteMessageButton);
+            return renderedPlayerMessage.append(deleteMessageButton);
+        } else if (audience instanceof ConsoleCommandSender) {
+            return renderedConsoleMessage;
         }
-        return renderedMessage;
+        return renderedPlayerMessage;
     }
 
     private TagResolver playerNameResolver(Component displayName) {

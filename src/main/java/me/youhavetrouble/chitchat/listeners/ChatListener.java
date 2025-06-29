@@ -21,7 +21,8 @@ public class ChatListener implements Listener {
     public void onChat(AsyncChatEvent event) {
         event.renderer(new ChitChatRenderer(
                 plugin,
-                plugin.getFormat(),
+                plugin.getPlayerFormat(),
+                plugin.getConsoleFormat(),
                 event.signedMessage(),
                 event.getPlayer(),
                 event.originalMessage()

@@ -23,7 +23,8 @@ public final class ChitChat extends JavaPlugin {
 
     private SignatureCache signatures;
 
-    private String format;
+    private String playerFormat;
+    private String consoleFormat;
 
     @Override
     public void onEnable() {
@@ -46,7 +47,8 @@ public final class ChitChat extends JavaPlugin {
             saveDefaultConfig();
             reloadConfig();
             FileConfiguration config = getConfig();
-            this.format = config.getString("format","<playername>: <message>");
+            this.playerFormat = config.getString("player-format","<playername>: <message>");
+            this.consoleFormat = config.getString("console-format","[CHAT] <playername>: <message>");
 
         } catch (Exception e) {
             getLogger().severe("Error loading config: " + e.getMessage());
@@ -60,8 +62,11 @@ public final class ChitChat extends JavaPlugin {
         return papiHooked;
     }
 
-    public String getFormat() {
-        return format;
+    public String getPlayerFormat() {
+        return playerFormat;
+    }
+    public String getConsoleFormat() {
+        return consoleFormat;
     }
 
     @Nullable

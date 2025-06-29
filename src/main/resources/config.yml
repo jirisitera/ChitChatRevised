@@ -3,7 +3,8 @@
 # <message> - Message sent by player
 # <placeholder:papi_placeholder> - PlaceholderAPI placeholder
 
-format: "<playername>: <message>"
+player-format: "<playername>: <message>"
+console-format: "[CHAT] <playername>: <message>"
 
 # How many messages back to keep for deletion purposes.
 # Changing this will only take effect on server restart.
